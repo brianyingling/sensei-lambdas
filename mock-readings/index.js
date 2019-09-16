@@ -8,21 +8,16 @@ const docClient = new AWS.DynamoDB.DocumentClient({
 const MOCK_001 = 'MOCK_001';
 
 const generateMockedReading = () => ({
+    "readingId": uuidv4(),
     "value": (Math.random() * 10) + 70,
     "scale": "fahrenheit",
     "device": MOCK_001,
-    "createdAt": new Date()
+    "createdAt": new Date().toString()
 });
 
 exports.handler = function(event, context, cb) {
     var params = {
-        Item: {
-            "readingId": uuidv4(),
-            "value": generateMockedReading(),
-            "scale": "fahrenheit",
-            "device": MOCK_001,
-            "createdAt": new Date()
-        },
+        Item: generateMockedReading(),
         TableName: 'readings'
     }
 
