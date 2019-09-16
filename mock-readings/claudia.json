@@ -1,0 +1,7 @@
+{
+  "lambda": {
+    "role": "mock-readings-executor",
+    "name": "mock-readings",
+    "region": "us-east-1"
+  }
+}
