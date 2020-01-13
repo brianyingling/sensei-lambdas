@@ -12,20 +12,41 @@ const generateMockedReading = () => ({
     "value": (Math.random() * 10) + 70,
     "scale": "fahrenheit",
     "device": MOCK_001,
-    "createdAt": new Date().toString()
+    "createdAt": new Date().toISOString()
+});
+
+const generateNewMockedReading = (deviceId) => ({
+    "PK": `Reading-${uuidv4()}`,
+    "SK": "READING",
+    "data": deviceId,
+    "value": (Math.random() * 10) + 70,
+    "scale":"Fahrenheit",
+    "createdAt": new Date().toISOString()
 });
 
 exports.handler = function(event, context, cb) {
+    // simulate reception from external device
+    var reading = generateMockedReading();
+
     var params = {
-        Item: generateMockedReading(),
-        TableName: 'readings'
+        // Item: generateMockedReading(),
+        Item: generateNewMockedReading('Device-001'),
+        // TableName: 'readings'
+        TableName: 'sensei'
     }
+
+    var secondParams = {
+        Item: generateNewMockedReading('Device-002'),
+        TableName: 'sensei'
+    };
 
     docClient.put(params, function(err, data) {
         if (err) {
             cb(err, null)
         } else {
-            cb(null, data);
+            docClient.put(secondParams, function(err, resp) {
+                cb(null, resp);
+            });
         }
     });
 }
